@@ -325,6 +325,18 @@ class ExactInference(InferenceModule):
         """
         "*** YOUR CODE HERE ***"
 
+        dist = DiscreteDistribution()
+
+        for i in range(0, len(self.allPositions)):
+            oldPosition = self.allPositions[i]
+            newPositionDist = self.getPositionDistribution(gameState, oldPosition)
+            oldProbability = self.beliefs[oldPosition]
+            for newPosition in newPositionDist.keys():
+                dist[newPosition] = oldProbability * newPositionDist[newPosition] + dist[newPosition]
+                
+        dist.normalize()
+        self.beliefs = dist
+
     def getBeliefDistribution(self):
         return self.beliefs
 
