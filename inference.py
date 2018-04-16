@@ -305,6 +305,15 @@ class ExactInference(InferenceModule):
         "*** YOUR CODE HERE ***"
         self.beliefs.normalize()
 
+        dist = DiscreteDistribution()
+        for i in range(0, len(self.allPositions)):
+            position = self.allPositions[i]
+            prob = self.getObservationProb(observation, gameState.getPacmanPosition(), position, self.getJailPosition())
+            dist[position] = self.beliefs[position] * prob;
+
+        dist.normalize()
+        self.beliefs = dist
+
     def elapseTime(self, gameState):
         """
         Predict beliefs in response to a time step passing from the current
