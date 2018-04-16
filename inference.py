@@ -189,6 +189,14 @@ class InferenceModule:
         """
         "*** YOUR CODE HERE ***"
 
+        if ghostPosition == jailPosition:
+            return 1 if noisyDistance == None else 0
+        elif noisyDistance == None:
+            return 0
+
+        manhattanDist = manhattanDistance(pacmanPosition, ghostPosition)
+        return busters.getObservationProbability(noisyDistance, manhattanDist)
+
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
         Set the position of the ghost for this inference module to the specified
