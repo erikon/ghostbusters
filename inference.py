@@ -336,7 +336,7 @@ class ExactInference(InferenceModule):
             oldProbability = self.beliefs[oldPosition]
             for newPosition in newPositionDist.keys():
                 dist[newPosition] = oldProbability * newPositionDist[newPosition] + dist[newPosition]
-                
+
         dist.normalize()
         self.beliefs = dist
 
@@ -387,7 +387,7 @@ class ParticleFilter(InferenceModule):
         if dististance.total() == 0:
             self.initializeUniformly(gameState)
         else:
-            self.beliefs = dististance.normalize()     
+            self.beliefs = dististance.normalize()
             for i in range(self.numParticles):
                 self.particles[i] = dististance.sample()
 
@@ -397,6 +397,16 @@ class ParticleFilter(InferenceModule):
         gameState.
         """
         "*** YOUR CODE HERE ***"
+        # Question 7
+        oldParticles = DiscreteDistribution()
+        for i in range(0, len(self.particles)):
+            if self.particles[i] not in oldParticles.keys():
+                dist = self.getPositionDistribution(gameState, self.particles[i])
+                oldParticles[self.particles[i]] = dist
+                self.particles[i] = dist.sample()
+            else:
+                self.particles[i] = oldParticles[self.particles[i]].sample()
+
 
     def getBeliefDistribution(self):
         """
