@@ -17,6 +17,9 @@ import random
 import busters
 import game
 
+# Added the import for util here, not sure if that's allowed ya feel
+import util
+
 from util import manhattanDistance
 
 
@@ -362,6 +365,8 @@ class ParticleFilter(InferenceModule):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
+        for i in range(self.numParticles):
+            self.particles.append(self.legalPositions[i % len(self.legalPositions)])
 
     def observeUpdate(self, observation, gameState):
         """
@@ -391,6 +396,11 @@ class ParticleFilter(InferenceModule):
         essentially converts a list of particles into a belief distribution.
         """
         "*** YOUR CODE HERE ***"
+
+        beliefDistribution = util.Counter()
+        for p in self.particles:
+            beliefDistribution[p] += float(1) / self.numParticles
+        return beliefDistribution
 
 
 class JointParticleFilter(ParticleFilter):

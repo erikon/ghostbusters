@@ -145,10 +145,10 @@ class GreedyBustersAgent(BustersAgent):
         # Question 4
         optimalAction = None
         optimalDistance = None
-        for x in livingGhostPositionDistributions:
+        for beliefs in livingGhostPositionDistributions:
             possiblePosition = None
             possibleProbability = None
-            for curPosition, curProbability in x.items():
+            for curPosition, curProbability in beliefs.items():
                 if possibleProbability == None or curProbability > possibleProbability:
                     possiblePosition = curPosition
                     possibleProbability = curProbability
