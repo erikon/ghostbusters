@@ -486,21 +486,21 @@ class JointParticleFilter(ParticleFilter):
         """
         "*** YOUR CODE HERE ***"
 
-        dististance = DiscreteDistribution()
-        for p in self.particles:
-            prob = 1
-            for i in range(self.numGhosts):
-                prob *= self.getObservationProb(observation[i], gameState.getPacmanPosition(), p[i], self.getJailPosition(i))
-            dististance[p] += prob
+        distance = DiscreteDistribution()
+        if observation != None:
+            for p in self.particles:
+                prob = 1
+                for i in range(0, self.numGhosts):
+                    prob *= self.getObservationProb(observation[i], gameState.getPacmanPosition(), p[i], self.getJailPosition(i))
+                distance[p] += prob
 
-        self.beliefs = dististance
-
-        if self.beliefs.total() == 0:
-            self.initializeUniformly(gameState)
+        if distance.total() != 0:
+            self.particles = [distance.sample() for i in range(self.numParticles)]
         else:
-            self.beliefs = dististance.normalize()
-            for i in range(self.numParticles):
-                self.particles[i] = dististance.sample()
+            if observation == None:
+                self.particles = [self.getJailPosition(i) for i in range(self.numParticles)]
+            else:
+                self.initializeUniformly(gameState)
 
     def elapseTime(self, gameState):
         """
