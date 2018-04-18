@@ -486,6 +486,22 @@ class JointParticleFilter(ParticleFilter):
         """
         "*** YOUR CODE HERE ***"
 
+        dististance = DiscreteDistribution()
+        for p in self.particles:
+            prob = 1
+            for i in range(self.numGhosts):
+                prob *= self.getObservationProb(observation[i], gameState.getPacmanPosition(), p[i], self.getJailPosition(i))
+            dististance[p] += prob
+
+        self.beliefs = dististance
+
+        if self.beliefs.total() == 0:
+            self.initializeUniformly(gameState)
+        else:
+            self.beliefs = dististance.normalize()
+            for i in range(self.numParticles):
+                self.particles[i] = dististance.sample()
+
     def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
